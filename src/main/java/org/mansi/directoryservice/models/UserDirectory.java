@@ -10,14 +10,14 @@ public class UserDirectory {
 
     @Id
     private String id;
-    private String name;
+    private String userName;
     private String phoneNumber;
     private String emailAddress;
 
     private List<Contact> userContacts;
 
-    public UserDirectory(String name, String phoneNumber, String emailAddress, List<Contact> userContacts) {
-        this.name = name;
+    public UserDirectory(String userName, String phoneNumber, String emailAddress, List<Contact> userContacts) {
+        this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.userContacts = userContacts;
@@ -32,12 +32,12 @@ public class UserDirectory {
         this.userContacts = userContacts;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhoneNumber() {

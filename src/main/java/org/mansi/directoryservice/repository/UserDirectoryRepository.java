@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserDirectoryRepository extends MongoRepository<UserDirectory, String> {
 
+    public UserDirectory findByUserName(String userName);
 
 }

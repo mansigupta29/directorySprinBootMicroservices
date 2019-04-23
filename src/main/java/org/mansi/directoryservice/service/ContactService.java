@@ -21,15 +21,14 @@ public class ContactService {
 
 
 
-    public List<Contact> findContact(String userId, String  contact){
+    public List<Contact> findContactInfo(String userName, String  contact){
 
         List<Contact> contact2 = new ArrayList<>();
 
-        Optional<UserDirectory> userDirectoryOptional = userDirectoryRepository.findById(userId);
+        UserDirectory userDirectory = userDirectoryRepository.findByUserName(userName);
 
-        if (userDirectoryOptional.isPresent()) {
 
-            UserDirectory userDirectory = userDirectoryOptional.get();
+
             List<Contact> contactList= userDirectory.getUserContacts();
             for (Contact contact1: contactList){
                 if (contact1.getName().equals(contact)) {
@@ -39,21 +38,18 @@ public class ContactService {
 
             }
 
-
-        }
         return contact2;
+        }
 
 
-    }
-
-    public HttpStatus updateContact(String userId, String contactName, Contact contact){
 
 
-        Optional<UserDirectory> userDirectoryOptional = userDirectoryRepository.findById(userId);
+    public UserDirectory updateContact(String userName, String contactName, Contact contact){
 
-        if (userDirectoryOptional.isPresent()) {
 
-            UserDirectory userDirectory = userDirectoryOptional.get();
+       UserDirectory userDirectory = userDirectoryRepository.findByUserName(userName);
+
+
 
             List<Contact> contactList= userDirectory.getUserContacts();
 
@@ -61,11 +57,8 @@ public class ContactService {
             for (Contact contact1: contactList){
                 if (contact1.getName().equals(contactName)) {
 
-                    contact1.setPhoneNumber(contact.getPhoneNumber());
-                    contact1.setEmailAddress(contact.getEmailAddress());
-                    contact1.setName(contact.getName());
-
-
+                    contactList.remove(contact1);
+                    contactList.add(contact);
 
                     break;
                 }
@@ -73,24 +66,20 @@ public class ContactService {
             }
 
             userDirectory.setUserContacts(contactList);
-            userDirectoryRepository.save(userDirectory);
-            return HttpStatus.ACCEPTED;
-        }
-        else return HttpStatus.BAD_REQUEST;
+            return userDirectoryRepository.save(userDirectory);
+
 
 
 
 
     }
 
-    public HttpStatus removeContact(String userId, String  contact){
+    public void removeContact(String userName, String  contact){
 
 
-        Optional<UserDirectory> userDirectoryOptional = userDirectoryRepository.findById(userId);
+       UserDirectory userDirectory = userDirectoryRepository.findByUserName(userName);
 
-        if (userDirectoryOptional.isPresent()) {
 
-            UserDirectory userDirectory = userDirectoryOptional.get();
 
             List<Contact> contactList= userDirectory.getUserContacts();
 
@@ -106,12 +95,6 @@ public class ContactService {
             userDirectory.setUserContacts(contactList);
 
              userDirectoryRepository.save(userDirectory);
-            return HttpStatus.ACCEPTED;
-        }
-        else return HttpStatus.BAD_REQUEST;
-
-
-
 
 
     }

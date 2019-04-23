@@ -18,41 +18,40 @@ public class UserDirectoryService {
     private UserDirectoryRepository userDirectoryRepository;
 
 
-    public UserDirectory addUser(UserDirectory userDirectory){
+    public String addUser(UserDirectory userDirectory){
 
-        return userDirectoryRepository.save(new UserDirectory(userDirectory.getName(), userDirectory.getPhoneNumber(), userDirectory.getEmailAddress(), userDirectory.getUserContacts()));
+        List<UserDirectory> userDirectories = userDirectoryRepository.findAll();
+        for (UserDirectory userInfo : userDirectories){
 
+            if (userInfo.getUserName().equals(userDirectory.getUserName())){
+                return "UserName Already Exists";
+
+            }
+        }
+
+        userDirectoryRepository.save(new UserDirectory(userDirectory.getUserName(), userDirectory.getPhoneNumber(), userDirectory.getEmailAddress(), userDirectory.getUserContacts()));
+        return "User Added";
 
     }
 
-    public Optional<UserDirectory> getAllContacts(String userId){
+    public UserDirectory getUserInfo(String userName){
 
-       return userDirectoryRepository.findById(userId);
+       return userDirectoryRepository.findByUserName(userName);
     }
 
 
-    public HttpStatus addContact(String userId, Contact contact) {
+    public UserDirectory addContact(String userName, Contact contact) {
 
-        Optional<UserDirectory> userDirectoryOptional = userDirectoryRepository.findById(userId);
+        UserDirectory userDirectory = userDirectoryRepository.findByUserName(userName);
 
-        if (userDirectoryOptional.isPresent()) {
 
-            UserDirectory userDirectory = userDirectoryOptional.get();
 
             List<Contact> contacts = userDirectory.getUserContacts();
 
             contacts.add(contact);
 
-             userDirectoryRepository.save(userDirectory);
-            return  HttpStatus.ACCEPTED;
-        }
+            return userDirectoryRepository.save(userDirectory);
 
-        else {
-
-
-
-            return HttpStatus.BAD_REQUEST;
-        }
     }
 
     public List<UserDirectory> getAll(){
@@ -60,38 +59,23 @@ public class UserDirectoryService {
         return userDirectoryRepository.findAll();
     }
 
-    public HttpStatus updateUser(String userId, UserDirectory userDirectory){
+    //update user data except userName and contacts (as contacts can be update in other url)
+    public UserDirectory updateUserInfo(String userName, UserDirectory userDirectory){
 
-       Optional<UserDirectory> userDirectoryOptional =  userDirectoryRepository.findById(userId);
 
-       if (userDirectoryOptional.isPresent()){
+       UserDirectory findUserDirectory =  userDirectoryRepository.findByUserName(userName);
 
-           UserDirectory findUserDirectory = userDirectoryOptional.get();
-
-           findUserDirectory.setUserContacts(userDirectory.getUserContacts());
            findUserDirectory.setEmailAddress(userDirectory.getEmailAddress());
            findUserDirectory.setPhoneNumber(userDirectory.getPhoneNumber());
-           findUserDirectory.setName(userDirectory.getName());
 
-            userDirectoryRepository.save(userDirectory);
-
-           return  HttpStatus.ACCEPTED;
-       }
-
-       else {
-
-
-
-           return HttpStatus.BAD_REQUEST;
-       }
-
-
+          return userDirectoryRepository.save(findUserDirectory);
 
     }
 
-    public void removeUser(String userId){
+    public void removeUser(String userName){
 
-         userDirectoryRepository.deleteById(userId);
+        UserDirectory userDirectory =  userDirectoryRepository.findByUserName(userName);
+        userDirectoryRepository.delete(userDirectory);
 
     }
 

@@ -23,21 +23,21 @@ public class DbSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         UserDirectory user1 = new UserDirectory(
-                "mansi",
+                "mansi29",
                 "6475392678",
                 "imansigupta29@gmail.com",
                 Arrays.asList( new Contact("abhinav","6475394797","iabhisharma12@gmail.com"),
                         new Contact("neha","123456789","neha.thakral@gmail.com"))
         );
         UserDirectory user2 = new UserDirectory(
-                "neha",
+                "neha30",
                 "23468765",
                 "ineha29@gmail.com",
                 Arrays.asList( new Contact("abhi","6475394797","iabhisharma12@gmail.com"),
                         new Contact("mansi","6475392678","imansigupta29@gmail.com"))
         );
         UserDirectory user3 = new UserDirectory(
-                "abhinav",
+                "abhinav12",
                 "6475394797",
                 "iabhisharma12@gmail.com",
                 Arrays.asList( new Contact("mansi","6475392678","imansigupta29@gmail.com"),

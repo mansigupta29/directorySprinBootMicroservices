@@ -24,17 +24,17 @@ public class UserDirectoryController {
 
 
     // get particular user details and contacts
-    @RequestMapping(value = "{userId}",method = RequestMethod.GET)
-    public Optional<UserDirectory> getContacts(@PathVariable("userId") String userId){
+    @RequestMapping(value = "{userName}",method = RequestMethod.GET)
+    public UserDirectory getContacts(@PathVariable("userName") String userName){
 
-       return userDirectoryService.getAllContacts(userId);
+       return userDirectoryService.getUserInfo(userName);
 
 
     }
 
     //add a user in database
-    @RequestMapping(value = "add", method = RequestMethod.PUT)
-    public UserDirectory addUser(@RequestBody UserDirectory userDirectory){
+    @RequestMapping( method = RequestMethod.POST)
+    public String addUser(@RequestBody UserDirectory userDirectory){
 
          return userDirectoryService.addUser(userDirectory);
 
@@ -43,43 +43,34 @@ public class UserDirectoryController {
 
 
     //add a contact to a user
-    @RequestMapping(value = "{userId}/addContact", method = RequestMethod.PUT)
-    public void addContact(HttpServletResponse response, @PathVariable("userId") String userId, @RequestBody Contact contact){
+    @RequestMapping(value = "{userName}", method = RequestMethod.POST)
+    public UserDirectory addContact(HttpServletResponse response, @PathVariable("userName") String userName, @RequestBody Contact contact){
 
-        HttpStatus status = userDirectoryService.addContact(userId,contact);
-         if (status == HttpStatus.ACCEPTED){
-             response.setStatus(HttpServletResponse.SC_ACCEPTED);
-         }
-         else  if (userDirectoryService.addContact(userId,contact) == HttpStatus.BAD_REQUEST)
-         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return userDirectoryService.addContact(userName,contact);
+
 
     }
 
     //delete a user
-    @RequestMapping(value = "{userId}/delete", method = RequestMethod.DELETE)
-    public void removeUser(@PathVariable("userId") String userId){
+    @RequestMapping(value = "{userName}", method = RequestMethod.DELETE)
+    public void removeUser(@PathVariable("userName") String userName){
 
-         userDirectoryService.removeUser(userId);
+         userDirectoryService.removeUser(userName);
 
     }
 
     //update a user profile
-    @RequestMapping(value = "{userId}/update", method = RequestMethod.POST)
-    public void updateUser(HttpServletResponse response, @PathVariable("userId") String userId, @RequestBody UserDirectory userDirectory){
+    @RequestMapping(value = "{userName}", method = RequestMethod.PUT)
+    public UserDirectory updateUserInfo(HttpServletResponse response, @PathVariable("userName") String userName, @RequestBody UserDirectory userDirectory){
 
+        return userDirectoryService.updateUserInfo(userName, userDirectory);
 
-        HttpStatus status = userDirectoryService.updateUser(userId, userDirectory);
-        if (status == HttpStatus.ACCEPTED){
-            response.setStatus(HttpServletResponse.SC_ACCEPTED);
-        }
-        else  if (status == HttpStatus.BAD_REQUEST)
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     }
 
 
     // get all users and there data
-    @RequestMapping(value = "all", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<UserDirectory> getAll(){
 
         return userDirectoryService.getAll();

@@ -13,7 +13,7 @@ import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
-@RequestMapping("directory/users/{userId}/contacts/{contactName}")
+@RequestMapping("directory/users/{userName}/contacts/{contactName}")
 public class ContactController {
 
     @Autowired
@@ -22,35 +22,25 @@ public class ContactController {
 
     //get particular contact of user
     @RequestMapping(method = RequestMethod.GET)
-    public List<Contact> getContact(@PathVariable("userId") String userId, @PathVariable("contactName") String contactName){
+    public List<Contact> getContactInfo(@PathVariable("userName") String userName, @PathVariable("contactName") String contactName){
 
-      return contactService.findContact(userId,contactName);
+      return contactService.findContactInfo(userName,contactName);
     }
 
 
-    @RequestMapping(value = "update", method = RequestMethod.POST)
-    public void updateContact(HttpServletResponse response, @PathVariable("userId") String userId, @PathVariable("contactName") String contactName, @RequestBody Contact contact){
-        HttpStatus status = contactService.updateContact(userId, contactName, contact);
+    @RequestMapping( method = RequestMethod.PUT)
+    public UserDirectory updateContact(HttpServletResponse response, @PathVariable("userName") String userName, @PathVariable("contactName") String contactName, @RequestBody Contact contact){
+        return contactService.updateContact(userName, contactName, contact);
 
 
-        if (status == HttpStatus.ACCEPTED){
-            response.setStatus(HttpServletResponse.SC_ACCEPTED);
-        }
-        else  if (status == HttpStatus.BAD_REQUEST)
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
     }
 
 
-    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
-    public void removeContact(HttpServletResponse response, @PathVariable("userId") String userId, @PathVariable("contactName") String contactName){
+    @RequestMapping(method = RequestMethod.DELETE)
+    public void removeContact(HttpServletResponse response, @PathVariable("userName") String userName, @PathVariable("contactName") String contactName){
 
-        HttpStatus status = contactService.removeContact(userId, contactName);
-        if ( status == HttpStatus.ACCEPTED){
-            response.setStatus(HttpServletResponse.SC_ACCEPTED);
-        }
-        else  if (status == HttpStatus.BAD_REQUEST)
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+         contactService.removeContact(userName, contactName);
 
     }
 }

@@ -36,13 +36,7 @@ Body: {
 “id”: “objectId”,
 "userName": "name",
     "phoneNumber": "123456789",
-    "emailAddress": "email@gmail.com",
-    "userContacts": [
-        {
-            "name": "contactname",
-            "phoneNumber": "123456789",
-            "emailAddress": "email@gmail.com"
-        } ]
+    "emailAddress": "email@gmail.com"
 }
 
 

@@ -20,17 +20,25 @@ public class UserDirectoryService {
 
     public String addUser(UserDirectory userDirectory){
 
-        List<UserDirectory> userDirectories = userDirectoryRepository.findAll();
-        for (UserDirectory userInfo : userDirectories){
+        String userName = userDirectory.getUserName();
+        String phoneNum = userDirectory.getPhoneNumber();
+        String email = userDirectory.getEmailAddress();
+        List<Contact> contacts = userDirectory.getUserContacts();
 
-            if (userInfo.getUserName().equals(userDirectory.getUserName())){
-                return "UserName Already Exists";
+        if (userName!=null) {
+            List<UserDirectory> userDirectories = userDirectoryRepository.findAll();
+            for (UserDirectory userInfo : userDirectories) {
 
+                if (userInfo.getUserName().equals(userName)) {
+                    return "UserName Already Exists";
+
+                }
             }
-        }
 
-        userDirectoryRepository.save(new UserDirectory(userDirectory.getUserName(), userDirectory.getPhoneNumber(), userDirectory.getEmailAddress(), userDirectory.getUserContacts()));
-        return "User Added";
+            userDirectoryRepository.save(new UserDirectory(userName, phoneNum, email, contacts));
+            return "User Added";
+        }
+        return "must have username";
 
     }
 
@@ -42,15 +50,21 @@ public class UserDirectoryService {
 
     public UserDirectory addContact(String userName, Contact contact) {
 
+        String phoneNum = contact.getPhoneNumber();
+        String name = contact.getName();
+
         UserDirectory userDirectory = userDirectoryRepository.findByUserName(userName);
 
-
+        Contact contactObj = new Contact();
 
             List<Contact> contacts = userDirectory.getUserContacts();
 
-            contacts.add(contact);
+            if (phoneNum!=null && name!=null) {
 
-            return userDirectoryRepository.save(userDirectory);
+                    contacts.add(contact);
+            }
+                return userDirectoryRepository.save(userDirectory);
+
 
     }
 
@@ -62,11 +76,13 @@ public class UserDirectoryService {
     //update user data except userName and contacts (as contacts can be update in other url)
     public UserDirectory updateUserInfo(String userName, UserDirectory userDirectory){
 
+        String email = userDirectory.getEmailAddress();
+        String phone = userDirectory.getPhoneNumber();
 
        UserDirectory findUserDirectory =  userDirectoryRepository.findByUserName(userName);
 
-           findUserDirectory.setEmailAddress(userDirectory.getEmailAddress());
-           findUserDirectory.setPhoneNumber(userDirectory.getPhoneNumber());
+           if (email !=null) findUserDirectory.setEmailAddress(email);
+        if (phone !=null) findUserDirectory.setPhoneNumber(phone);
 
           return userDirectoryRepository.save(findUserDirectory);
 

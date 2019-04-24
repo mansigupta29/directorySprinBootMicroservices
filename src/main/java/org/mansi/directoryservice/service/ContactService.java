@@ -49,12 +49,16 @@ public class ContactService {
 
        UserDirectory userDirectory = userDirectoryRepository.findByUserName(userName);
 
+        String phoneNum = contact.getPhoneNumber();
+        String name = contact.getName();
+
+        List<Contact> contactList= userDirectory.getUserContacts();
 
 
-            List<Contact> contactList= userDirectory.getUserContacts();
 
+        if (phoneNum!=null && name!=null) {
 
-            for (Contact contact1: contactList){
+            for (Contact contact1 : contactList) {
                 if (contact1.getName().equals(contactName)) {
 
                     contactList.remove(contact1);
@@ -64,12 +68,9 @@ public class ContactService {
                 }
 
             }
-
+        }
             userDirectory.setUserContacts(contactList);
             return userDirectoryRepository.save(userDirectory);
-
-
-
 
 
     }
